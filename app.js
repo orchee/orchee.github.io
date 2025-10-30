@@ -96,8 +96,15 @@ class CardGame {
     }
     
     selectRoundType() {
-        // 20% chance for double round, 80% for single round
-        this.currentRoundType = Math.random() < 0.2 ? 'double' : 'single';
+        // 10% chance for sum round, 20% for double round, 70% for single round
+        const rand = Math.random();
+        if (rand < 0.1) {
+            this.currentRoundType = 'sum';
+        } else if (rand < 0.3) {
+            this.currentRoundType = 'double';
+        } else {
+            this.currentRoundType = 'single';
+        }
         return this.currentRoundType;
     }
     
@@ -171,20 +178,32 @@ class CardGame {
         const correct = this.correctAnswer;
         
         // Generate 3 options that are close to each other
-        // Sometimes include the correct answer twice
-        const includeCorrectTwice = Math.random() > 0.5;
+        // Sometimes include duplicate values (can be correct or incorrect)
+        const includeDuplicate = Math.random() > 0.5;
         
-        if (includeCorrectTwice) {
-            // Include correct answer twice
-            options.push(correct);
-            options.push(correct);
+        if (includeDuplicate) {
+            // Decide which value to duplicate
+            const possibleOffsets = [-1, 0, 1]; // -1, correct, or +1
+            const duplicateOffset = possibleOffsets[Math.floor(Math.random() * possibleOffsets.length)];
+            const duplicateValue = Math.max(0, Math.min(13, correct + duplicateOffset));
             
-            // Add one close incorrect answer
-            const offset = Math.random() > 0.5 ? 1 : -1;
-            const wrongAnswer = Math.max(0, Math.min(13, correct + offset));
-            options.push(wrongAnswer);
+            // Add duplicate value twice
+            options.push(duplicateValue);
+            options.push(duplicateValue);
+            
+            // Add one different value
+            let otherOffset;
+            if (duplicateOffset === 0) {
+                // If we duplicated the correct answer, add a wrong one
+                otherOffset = Math.random() > 0.5 ? 1 : -1;
+            } else {
+                // If we duplicated a wrong answer, we might add the correct one
+                otherOffset = duplicateOffset === 1 ? -1 : 1;
+            }
+            const otherValue = Math.max(0, Math.min(13, correct + otherOffset));
+            options.push(otherValue);
         } else {
-            // Include correct answer once
+            // No duplicates - include correct answer and two close incorrect answers
             options.push(correct);
             
             // Add two close incorrect answers
@@ -196,6 +215,38 @@ class CardGame {
                 options.push(wrongAnswer);
             }
         }
+        
+        // Shuffle the options
+        return options.sort(() => Math.random() - 0.5);
+    }
+    
+    generateSumAnswerOptions() {
+        const options = [];
+        const correct = this.correctAnswer;
+        
+        // Generate sum-based options
+        // The correct answer and close values will be shown as "a + b"
+        const values = [correct];
+        
+        // Add two close values
+        const offset1 = Math.random() > 0.5 ? 1 : -1;
+        const offset2 = Math.random() > 0.5 ? 2 : -2;
+        values.push(Math.max(0, Math.min(13, correct + offset1)));
+        values.push(Math.max(0, Math.min(13, correct + offset2)));
+        
+        // Convert each value to a sum format "a + b"
+        values.forEach(value => {
+            // Generate random split of the value
+            // For value n, we can split it as (0+n), (1+n-1), (2+n-2), etc.
+            const maxSplit = Math.min(value, 13);
+            const firstPart = Math.floor(Math.random() * (maxSplit + 1));
+            const secondPart = value - firstPart;
+            
+            options.push({
+                display: `${firstPart} + ${secondPart}`,
+                value: value
+            });
+        });
         
         // Shuffle the options
         return options.sort(() => Math.random() - 0.5);
@@ -248,6 +299,7 @@ class UIController {
         this.cardsSection = document.getElementById('cardsSection');
         this.trumpSection = document.getElementById('trumpSection');
         this.doubleHandSection = document.getElementById('doubleHandSection');
+        this.sumRoundSection = document.getElementById('sumRoundSection');
         this.gameStatus = document.getElementById('gameStatus');
         this.timerDisplay = document.getElementById('timerDisplay');
         this.scoreDisplay = document.getElementById('scoreDisplay');
@@ -262,11 +314,17 @@ class UIController {
             document.getElementById('answer2-double'),
             document.getElementById('answer3-double')
         ];
+        this.answerButtonsSum = [
+            document.getElementById('answer1-sum'),
+            document.getElementById('answer2-sum'),
+            document.getElementById('answer3-sum')
+        ];
         this.resultSection = document.getElementById('resultSection');
         this.resultMessage = document.getElementById('resultMessage');
         this.nextRoundButton = document.getElementById('nextRound');
         this.hiddenSuitName = document.getElementById('hiddenSuitName');
         this.hiddenSuitNameDouble = document.getElementById('hiddenSuitNameDouble');
+        this.hiddenSuitNameSum = document.getElementById('hiddenSuitNameSum');
         
         this.gameActive = false;
         this.currentAnswerOptions = [];
@@ -296,6 +354,14 @@ class UIController {
         });
         
         this.answerButtonsDouble.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                if (this.gameActive) {
+                    this.handleAnswer(parseInt(btn.dataset.value));
+                }
+            });
+        });
+        
+        this.answerButtonsSum.forEach((btn, index) => {
             btn.addEventListener('click', () => {
                 if (this.gameActive) {
                     this.handleAnswer(parseInt(btn.dataset.value));
@@ -351,10 +417,12 @@ class UIController {
         // Show game status
         this.gameStatus.style.display = 'block';
         
-        // Select round type (20% double, 80% single)
+        // Select round type (10% sum, 20% double, 70% single)
         const roundType = this.game.selectRoundType();
         
-        if (roundType === 'double') {
+        if (roundType === 'sum') {
+            this.startSumRound();
+        } else if (roundType === 'double') {
             this.startDoubleHandRound();
         } else {
             this.startSingleHandRound();
@@ -374,8 +442,9 @@ class UIController {
     }
     
     startSingleHandRound() {
-        // Hide double hand section, show single
+        // Hide other sections, show single
         this.doubleHandSection.style.display = 'none';
+        this.sumRoundSection.style.display = 'none';
         this.trumpSection.style.display = 'block';
         this.cardsSection.style.display = 'block';
         
@@ -401,9 +470,10 @@ class UIController {
     }
     
     startDoubleHandRound() {
-        // Hide single hand section, show double
+        // Hide other sections, show double
         this.trumpSection.style.display = 'none';
         this.cardsSection.style.display = 'none';
+        this.sumRoundSection.style.display = 'none';
         this.doubleHandSection.style.display = 'block';
         
         // Draw two hands
@@ -422,6 +492,31 @@ class UIController {
         // Generate and display answer options for double hand
         const options = this.game.generateAnswerOptions();
         this.displayAnswerOptionsDouble(options);
+    }
+    
+    startSumRound() {
+        // Hide other sections, show sum
+        this.trumpSection.style.display = 'none';
+        this.cardsSection.style.display = 'none';
+        this.doubleHandSection.style.display = 'none';
+        this.sumRoundSection.style.display = 'block';
+        
+        // Draw two hands
+        this.game.drawTwoHands();
+        
+        // Calculate remaining cards and get hidden suit
+        const result = this.game.calculateRemainingCards();
+        
+        // Update N and S counts for sum round
+        this.updateSumHandCounts(result.countsN, result.countsS);
+        
+        // Update hidden suit name
+        const suitData = this.game.suits[result.hiddenSuit];
+        this.hiddenSuitNameSum.innerHTML = `${suitData.symbol} ${suitData.name}`;
+        
+        // Generate and display sum answer options
+        const options = this.game.generateSumAnswerOptions();
+        this.displayAnswerOptionsSum(options);
     }
     
     updateTimerDisplay() {
@@ -527,6 +622,20 @@ class UIController {
         });
     }
     
+    displayAnswerOptionsSum(options) {
+        // options is an array of {display: "a + b", value: n}
+        this.currentAnswerOptions = options.map(opt => opt.value);
+        const suitSymbol = this.game.suits[this.game.hiddenSuit].symbol;
+        const suitClass = this.game.hiddenSuit;
+        
+        this.answerButtonsSum.forEach((btn, index) => {
+            btn.innerHTML = `<span class="${suitClass}">${options[index].display} ${suitSymbol}</span>`;
+            btn.dataset.value = options[index].value;
+            btn.disabled = false;
+            btn.classList.remove('correct', 'incorrect');
+        });
+    }
+    
     updateDoubleHandCounts(countsN, countsS) {
         const suits = ['spades', 'hearts', 'diamonds', 'clubs'];
         
@@ -539,6 +648,24 @@ class UIController {
             
             // Update S hand counts
             const countSElement = document.getElementById(`count-s-${suit}`);
+            if (countSElement) {
+                countSElement.textContent = countsS[suit];
+            }
+        });
+    }
+    
+    updateSumHandCounts(countsN, countsS) {
+        const suits = ['spades', 'hearts', 'diamonds', 'clubs'];
+        
+        suits.forEach(suit => {
+            // Update N hand counts for sum round
+            const countNElement = document.getElementById(`count-n-${suit}-sum`);
+            if (countNElement) {
+                countNElement.textContent = countsN[suit];
+            }
+            
+            // Update S hand counts for sum round
+            const countSElement = document.getElementById(`count-s-${suit}-sum`);
             if (countSElement) {
                 countSElement.textContent = countsS[suit];
             }
@@ -559,9 +686,11 @@ class UIController {
         }
         
         // Determine which button set to use
-        const buttonsToUse = this.game.currentRoundType === 'double' 
-            ? this.answerButtonsDouble 
-            : this.answerButtons;
+        const buttonsToUse = this.game.currentRoundType === 'sum'
+            ? this.answerButtonsSum
+            : (this.game.currentRoundType === 'double' 
+                ? this.answerButtonsDouble 
+                : this.answerButtons);
         
         // Disable all buttons and mark them
         buttonsToUse.forEach(btn => {
@@ -599,9 +728,11 @@ class UIController {
         this.game.adjustTimerForIncorrect();
         
         // Determine which button set to use
-        const buttonsToUse = this.game.currentRoundType === 'double' 
-            ? this.answerButtonsDouble 
-            : this.answerButtons;
+        const buttonsToUse = this.game.currentRoundType === 'sum'
+            ? this.answerButtonsSum
+            : (this.game.currentRoundType === 'double' 
+                ? this.answerButtonsDouble 
+                : this.answerButtons);
         
         // Disable all buttons and mark correct answer
         buttonsToUse.forEach(btn => {
