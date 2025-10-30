@@ -100,6 +100,89 @@
                     </div>
                 </section>
                 
+                <!-- Double Hand Section (N and S) -->
+                <section id="doubleHandSection" style="display: none;">
+                    <h2 class="h5 text-center mb-3">How many <span id="hiddenSuitNameDouble"></span> cards does WE have?</h2>
+                    <p class="text-center text-muted small mb-3">💡 Tip: Press the number on your keyboard to answer quickly</p>
+                    
+                    <!-- Hand N -->
+                    <div class="hand-label text-center mb-2">
+                        <strong>Hand N (North)</strong>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-3">
+                            <div class="trump-box-small spades">
+                                <div class="suit-symbol-small">♠</div>
+                                <div class="card-count-small" id="count-n-spades">0</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="trump-box-small hearts">
+                                <div class="suit-symbol-small">♥</div>
+                                <div class="card-count-small" id="count-n-hearts">0</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="trump-box-small diamonds">
+                                <div class="suit-symbol-small">♦</div>
+                                <div class="card-count-small" id="count-n-diamonds">0</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="trump-box-small clubs">
+                                <div class="suit-symbol-small">♣</div>
+                                <div class="card-count-small" id="count-n-clubs">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hand S -->
+                    <div class="hand-label text-center mb-2">
+                        <strong>Hand S (South)</strong>
+                    </div>
+                    <div class="row g-2 mb-4">
+                        <div class="col-3">
+                            <div class="trump-box-small spades">
+                                <div class="suit-symbol-small">♠</div>
+                                <div class="card-count-small" id="count-s-spades">0</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="trump-box-small hearts">
+                                <div class="suit-symbol-small">♥</div>
+                                <div class="card-count-small" id="count-s-hearts">0</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="trump-box-small diamonds">
+                                <div class="suit-symbol-small">♦</div>
+                                <div class="card-count-small" id="count-s-diamonds">0</div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="trump-box-small clubs">
+                                <div class="suit-symbol-small">♣</div>
+                                <div class="card-count-small" id="count-s-clubs">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Answer Options -->
+                    <div id="answerSectionDouble" class="answer-section">
+                        <div class="row g-3 justify-content-center">
+                            <div class="col-4 col-md-3">
+                                <button class="btn btn-answer w-100" id="answer1-double" data-value="0">0</button>
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <button class="btn btn-answer w-100" id="answer2-double" data-value="0">0</button>
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <button class="btn btn-answer w-100" id="answer3-double" data-value="0">0</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
                 <!-- Result Message -->
                 <section id="resultSection" class="text-center mt-4" style="display: none;">
                     <div id="resultMessage" class="result-message"></div>

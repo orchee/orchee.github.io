@@ -37,6 +37,9 @@ class CardGame {
         this.timeRemaining = 7.0;
         this.timerInterval = null;
         this.consecutiveCorrect = 0;
+        this.currentRoundType = 'single'; // 'single' or 'double'
+        this.handN = [];
+        this.handS = [];
         
         this.initializeDeck();
     }
@@ -67,6 +70,54 @@ class CardGame {
         this.shuffleDeck();
         this.drawnCards = this.deck.slice(0, count);
         return this.drawnCards;
+    }
+    
+    drawTwoHands() {
+        this.initializeDeck();
+        this.shuffleDeck();
+        this.handN = this.deck.slice(0, 13);
+        this.handS = this.deck.slice(13, 26);
+        return { handN: this.handN, handS: this.handS };
+    }
+    
+    getHandCounts(hand) {
+        const counts = {
+            spades: 0,
+            hearts: 0,
+            diamonds: 0,
+            clubs: 0
+        };
+        
+        hand.forEach(card => {
+            counts[card.suit]++;
+        });
+        
+        return counts;
+    }
+    
+    selectRoundType() {
+        // 20% chance for double round, 80% for single round
+        this.currentRoundType = Math.random() < 0.2 ? 'double' : 'single';
+        return this.currentRoundType;
+    }
+    
+    calculateRemainingCards() {
+        const countsN = this.getHandCounts(this.handN);
+        const countsS = this.getHandCounts(this.handS);
+        
+        const suits = ['spades', 'hearts', 'diamonds', 'clubs'];
+        this.hiddenSuit = suits[Math.floor(Math.random() * suits.length)];
+        
+        // Total cards in suit: 13
+        // Remaining in deck (WE) = 13 - N - S
+        this.correctAnswer = 13 - countsN[this.hiddenSuit] - countsS[this.hiddenSuit];
+        
+        return {
+            countsN,
+            countsS,
+            hiddenSuit: this.hiddenSuit,
+            answer: this.correctAnswer
+        };
     }
     
     groupAndSortCards() {
@@ -196,6 +247,7 @@ class UIController {
         this.showCardsToggle = document.getElementById('showCardsToggle');
         this.cardsSection = document.getElementById('cardsSection');
         this.trumpSection = document.getElementById('trumpSection');
+        this.doubleHandSection = document.getElementById('doubleHandSection');
         this.gameStatus = document.getElementById('gameStatus');
         this.timerDisplay = document.getElementById('timerDisplay');
         this.scoreDisplay = document.getElementById('scoreDisplay');
@@ -205,10 +257,16 @@ class UIController {
             document.getElementById('answer2'),
             document.getElementById('answer3')
         ];
+        this.answerButtonsDouble = [
+            document.getElementById('answer1-double'),
+            document.getElementById('answer2-double'),
+            document.getElementById('answer3-double')
+        ];
         this.resultSection = document.getElementById('resultSection');
         this.resultMessage = document.getElementById('resultMessage');
         this.nextRoundButton = document.getElementById('nextRound');
         this.hiddenSuitName = document.getElementById('hiddenSuitName');
+        this.hiddenSuitNameDouble = document.getElementById('hiddenSuitNameDouble');
         
         this.gameActive = false;
         this.currentAnswerOptions = [];
@@ -230,6 +288,14 @@ class UIController {
         });
         
         this.answerButtons.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                if (this.gameActive) {
+                    this.handleAnswer(parseInt(btn.dataset.value));
+                }
+            });
+        });
+        
+        this.answerButtonsDouble.forEach((btn, index) => {
             btn.addEventListener('click', () => {
                 if (this.gameActive) {
                     this.handleAnswer(parseInt(btn.dataset.value));
@@ -282,16 +348,42 @@ class UIController {
             this.cardsContainer.style.display = 'none';
         }
         
+        // Show game status
+        this.gameStatus.style.display = 'block';
+        
+        // Select round type (20% double, 80% single)
+        const roundType = this.game.selectRoundType();
+        
+        if (roundType === 'double') {
+            this.startDoubleHandRound();
+        } else {
+            this.startSingleHandRound();
+        }
+        
+        // Update score display
+        this.scoreDisplay.textContent = `Score: ${this.game.score}`;
+        
+        // Start timer
+        this.game.startTimer((result) => {
+            if (result === 'timeout') {
+                this.handleTimeout();
+            }
+        });
+        
+        this.updateTimerDisplay();
+    }
+    
+    startSingleHandRound() {
+        // Hide double hand section, show single
+        this.doubleHandSection.style.display = 'none';
+        this.trumpSection.style.display = 'block';
+        this.cardsSection.style.display = 'block';
+        
         // Draw cards
         this.game.drawCards(13);
         
         // Display cards
         this.displayCards();
-        
-        // Show sections
-        this.cardsSection.style.display = 'block';
-        this.trumpSection.style.display = 'block';
-        this.gameStatus.style.display = 'block';
         
         // Select random suit to hide
         const hiddenSuit = this.game.selectRandomHiddenSuit();
@@ -306,18 +398,30 @@ class UIController {
         // Generate and display answer options
         const options = this.game.generateAnswerOptions();
         this.displayAnswerOptions(options);
+    }
+    
+    startDoubleHandRound() {
+        // Hide single hand section, show double
+        this.trumpSection.style.display = 'none';
+        this.cardsSection.style.display = 'none';
+        this.doubleHandSection.style.display = 'block';
         
-        // Update score display
-        this.scoreDisplay.textContent = `Score: ${this.game.score}`;
+        // Draw two hands
+        this.game.drawTwoHands();
         
-        // Start timer
-        this.game.startTimer((result) => {
-            if (result === 'timeout') {
-                this.handleTimeout();
-            }
-        });
+        // Calculate remaining cards and get hidden suit
+        const result = this.game.calculateRemainingCards();
         
-        this.updateTimerDisplay();
+        // Update N and S counts
+        this.updateDoubleHandCounts(result.countsN, result.countsS);
+        
+        // Update hidden suit name
+        const suitData = this.game.suits[result.hiddenSuit];
+        this.hiddenSuitNameDouble.innerHTML = `${suitData.symbol} ${suitData.name}`;
+        
+        // Generate and display answer options for double hand
+        const options = this.game.generateAnswerOptions();
+        this.displayAnswerOptionsDouble(options);
     }
     
     updateTimerDisplay() {
@@ -410,6 +514,37 @@ class UIController {
         });
     }
     
+    displayAnswerOptionsDouble(options) {
+        this.currentAnswerOptions = options;
+        const suitSymbol = this.game.suits[this.game.hiddenSuit].symbol;
+        const suitClass = this.game.hiddenSuit; // spades, hearts, diamonds, clubs
+        
+        this.answerButtonsDouble.forEach((btn, index) => {
+            btn.innerHTML = `<span class="${suitClass}">${options[index]} ${suitSymbol}</span>`;
+            btn.dataset.value = options[index];
+            btn.disabled = false;
+            btn.classList.remove('correct', 'incorrect');
+        });
+    }
+    
+    updateDoubleHandCounts(countsN, countsS) {
+        const suits = ['spades', 'hearts', 'diamonds', 'clubs'];
+        
+        suits.forEach(suit => {
+            // Update N hand counts
+            const countNElement = document.getElementById(`count-n-${suit}`);
+            if (countNElement) {
+                countNElement.textContent = countsN[suit];
+            }
+            
+            // Update S hand counts
+            const countSElement = document.getElementById(`count-s-${suit}`);
+            if (countSElement) {
+                countSElement.textContent = countsS[suit];
+            }
+        });
+    }
+    
     handleAnswer(selectedAnswer) {
         this.gameActive = false;
         this.game.stopTimer();
@@ -423,8 +558,13 @@ class UIController {
             this.game.adjustTimerForIncorrect();
         }
         
+        // Determine which button set to use
+        const buttonsToUse = this.game.currentRoundType === 'double' 
+            ? this.answerButtonsDouble 
+            : this.answerButtons;
+        
         // Disable all buttons and mark them
-        this.answerButtons.forEach(btn => {
+        buttonsToUse.forEach(btn => {
             const value = parseInt(btn.dataset.value);
             btn.disabled = true;
             
@@ -435,9 +575,11 @@ class UIController {
             }
         });
         
-        // Reveal the hidden count
-        const boxElement = document.getElementById(`box-${this.game.hiddenSuit}`);
-        boxElement.classList.remove('hidden');
+        // Reveal the hidden count (only for single hand round)
+        if (this.game.currentRoundType === 'single') {
+            const boxElement = document.getElementById(`box-${this.game.hiddenSuit}`);
+            boxElement.classList.remove('hidden');
+        }
         
         // Update score
         if (isCorrect) {
@@ -456,8 +598,13 @@ class UIController {
         // Timeout is treated as incorrect - adjust timer
         this.game.adjustTimerForIncorrect();
         
+        // Determine which button set to use
+        const buttonsToUse = this.game.currentRoundType === 'double' 
+            ? this.answerButtonsDouble 
+            : this.answerButtons;
+        
         // Disable all buttons and mark correct answer
-        this.answerButtons.forEach(btn => {
+        buttonsToUse.forEach(btn => {
             const value = parseInt(btn.dataset.value);
             btn.disabled = true;
             
@@ -466,9 +613,11 @@ class UIController {
             }
         });
         
-        // Reveal the hidden count
-        const boxElement = document.getElementById(`box-${this.game.hiddenSuit}`);
-        boxElement.classList.remove('hidden');
+        // Reveal the hidden count (only for single hand round)
+        if (this.game.currentRoundType === 'single') {
+            const boxElement = document.getElementById(`box-${this.game.hiddenSuit}`);
+            boxElement.classList.remove('hidden');
+        }
         
         // Show result
         setTimeout(() => {
