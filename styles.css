@@ -1,0 +1,389 @@
+:root {
+    --spades-color: #000000;
+    --hearts-color: #dc3545;
+    --diamonds-color: #dc3545;
+    --clubs-color: #000000;
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+    font-weight: 700;
+}
+
+/* Cards Container */
+.cards-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.cards-row {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    justify-content: flex-start;
+}
+
+.cards-row::-webkit-scrollbar {
+    height: 8px;
+}
+
+.cards-row::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.cards-row::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.cards-row::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Card Styling */
+.card-item {
+    width: 60px;
+    height: 85px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.card-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-item.spades {
+    color: var(--spades-color);
+}
+
+.card-item.hearts {
+    color: var(--hearts-color);
+}
+
+.card-item.diamonds {
+    color: var(--diamonds-color);
+}
+
+.card-item.clubs {
+    color: var(--clubs-color);
+}
+
+.card-rank {
+    font-size: 1.1rem;
+}
+
+.card-suit {
+    font-size: 1.5rem;
+}
+
+/* Trump Boxes */
+.trump-box {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 0.75rem;
+    text-align: center;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.trump-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.trump-box.spades {
+    border: 2px solid var(--spades-color);
+}
+
+.trump-box.hearts {
+    border: 2px solid var(--hearts-color);
+}
+
+.trump-box.diamonds {
+    border: 2px solid var(--diamonds-color);
+}
+
+.trump-box.clubs {
+    border: 2px solid var(--clubs-color);
+}
+
+.suit-symbol {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+}
+
+.trump-box.spades .suit-symbol {
+    color: var(--spades-color);
+}
+
+.trump-box.hearts .suit-symbol {
+    color: var(--hearts-color);
+}
+
+.trump-box.diamonds .suit-symbol {
+    color: var(--diamonds-color);
+}
+
+.trump-box.clubs .suit-symbol {
+    color: var(--clubs-color);
+}
+
+.suit-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.card-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+/* Game Info Box */
+.game-info-box {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.timer-display {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.timer-display.warning {
+    color: #dc3545;
+    animation: pulse 0.5s ease-in-out infinite;
+}
+
+.score-display {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #666;
+}
+
+/* Answer Section */
+.answer-section {
+    margin-top: 2rem;
+}
+
+.btn-answer {
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #dee2e6;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.btn-answer:hover:not(:disabled) {
+    transform: scale(1.05);
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+}
+
+.btn-answer:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-answer.correct {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+    animation: correctPulse 0.5s ease;
+}
+
+.btn-answer.incorrect {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    animation: shake 0.5s ease;
+}
+
+/* Result Message */
+.result-message {
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.result-message.correct-result {
+    background: #d4edda;
+    color: #155724;
+    border: 2px solid #28a745;
+}
+
+.result-message.incorrect-result {
+    background: #f8d7da;
+    color: #721c24;
+    border: 2px solid #dc3545;
+}
+
+.result-message.timeout-result {
+    background: #fff3cd;
+    color: #856404;
+    border: 2px solid #ffc107;
+}
+
+/* Hidden suit box */
+.trump-box.hidden {
+    position: relative;
+}
+
+.trump-box.hidden .card-count {
+    filter: blur(10px);
+    user-select: none;
+}
+
+/* Show cards toggle */
+.form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.form-check-label {
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (min-width: 576px) {
+    .card-item {
+        width: 70px;
+        height: 100px;
+        font-size: 1.5rem;
+    }
+    
+    .cards-row {
+        gap: 0.75rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .card-item {
+        width: 80px;
+        height: 115px;
+    }
+    
+    .cards-container {
+        padding: 2rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .card-item {
+        width: 90px;
+        height: 130px;
+        font-size: 1.75rem;
+    }
+}
+
+/* Animation for card appearance */
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.card-item {
+    animation: cardAppear 0.3s ease forwards;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes correctPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}

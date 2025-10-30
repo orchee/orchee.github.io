@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Card Game - Draw and organize cards by suit">
+    <title>Card Game PWA</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-12">
+                <header class="text-center mb-4" id="gameHeader">
+                    <h1 class="display-6 mb-3">🎴 Card Counting Game</h1>
+                    <button id="drawCards" class="btn btn-primary btn-lg">Start New Game</button>
+                </header>
+                
+                <!-- Game Status -->
+                <section id="gameStatus" class="mb-4 text-center" style="display: none;">
+                    <div class="game-info-box">
+                        <div id="timerDisplay" class="timer-display">7.0s</div>
+                        <div id="scoreDisplay" class="score-display">Score: 0</div>
+                    </div>
+                </section>
+                
+                <!-- Cards Display Area -->
+                <section id="cardsSection" class="mb-4" style="display: none;">
+                    <div class="form-check form-switch text-center mb-3">
+                        <input class="form-check-input" type="checkbox" id="showCardsToggle">
+                        <label class="form-check-label" for="showCardsToggle">
+                            Hide / Show Cards
+                        </label>
+                    </div>
+                    <div id="cardsContainer" class="cards-container" style="display: none;">
+                        <!-- Cards will be displayed here -->
+                    </div>
+                </section>
+                
+                <!-- Trump Boxes -->
+                <section id="trumpSection" style="display: none;">
+                    <h2 class="h5 text-center mb-3">How many cards in <span id="hiddenSuitName"></span>?</h2>
+                    <p class="text-center text-muted small mb-3">💡 Tip: Press the number on your keyboard to answer quickly</p>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="trump-box spades" id="box-spades">
+                                <div class="suit-symbol">♠</div>
+                                <div class="suit-name">Spades</div>
+                                <div class="card-count" id="count-spades">0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="trump-box hearts" id="box-hearts">
+                                <div class="suit-symbol">♥</div>
+                                <div class="suit-name">Hearts</div>
+                                <div class="card-count" id="count-hearts">0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="trump-box diamonds" id="box-diamonds">
+                                <div class="suit-symbol">♦</div>
+                                <div class="suit-name">Diamonds</div>
+                                <div class="card-count" id="count-diamonds">0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="trump-box clubs" id="box-clubs">
+                                <div class="suit-symbol">♣</div>
+                                <div class="suit-name">Clubs</div>
+                                <div class="card-count" id="count-clubs">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Answer Options -->
+                    <div id="answerSection" class="answer-section">
+                        <div class="row g-3 justify-content-center">
+                            <div class="col-4 col-md-3">
+                                <button class="btn btn-answer w-100" id="answer1" data-value="0">0</button>
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <button class="btn btn-answer w-100" id="answer2" data-value="0">0</button>
+                            </div>
+                            <div class="col-4 col-md-3">
+                                <button class="btn btn-answer w-100" id="answer3" data-value="0">0</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Result Message -->
+                <section id="resultSection" class="text-center mt-4" style="display: none;">
+                    <div id="resultMessage" class="result-message"></div>
+                    <button id="nextRound" class="btn btn-primary btn-lg mt-3">Next Round</button>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
