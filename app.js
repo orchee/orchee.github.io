@@ -494,6 +494,15 @@ class UIController {
         
         // Update score display
         this.scoreDisplay.textContent = `Score: ${this.game.score}`;
+        
+        // Scroll to bottom and focus on next round button
+        setTimeout(() => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+            this.nextRoundButton.focus();
+        }, 100);
     }
 }
 
