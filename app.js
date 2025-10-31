@@ -224,24 +224,42 @@ class CardGame {
         const options = [];
         const correct = this.correctAnswer;
         
-        // Generate sum-based options
-        // The correct answer and close values will be shown as "a + b"
-        const values = [correct];
+        // Always include the correct answer first
+        const correctFirstPart = Math.floor(Math.random() * (correct + 1));
+        const correctSecondPart = correct - correctFirstPart;
+        options.push({
+            display: `${correctFirstPart} + ${correctSecondPart}`,
+            value: correct
+        });
         
-        // Add two close values
-        const offset1 = Math.random() > 0.5 ? 1 : -1;
-        const offset2 = Math.random() > 0.5 ? 2 : -2;
-        values.push(Math.max(0, Math.min(13, correct + offset1)));
-        values.push(Math.max(0, Math.min(13, correct + offset2)));
+        // Generate two close incorrect values
+        const incorrectValues = [];
         
-        // Convert each value to a sum format "a + b"
-        values.forEach(value => {
-            // Generate random split of the value
-            // For value n, we can split it as (0+n), (1+n-1), (2+n-2), etc.
-            const maxSplit = Math.min(value, 13);
-            const firstPart = Math.floor(Math.random() * (maxSplit + 1));
+        // Try to add close values
+        const possibleOffsets = [-2, -1, 1, 2];
+        const shuffledOffsets = possibleOffsets.sort(() => Math.random() - 0.5);
+        
+        for (let offset of shuffledOffsets) {
+            const value = correct + offset;
+            // Only add if it's valid (0-13) and we need more options
+            if (value >= 0 && value <= 13 && incorrectValues.length < 2) {
+                incorrectValues.push(value);
+            }
+        }
+        
+        // If we still don't have 2 incorrect values, add any valid values
+        if (incorrectValues.length < 2) {
+            for (let i = 0; i <= 13; i++) {
+                if (i !== correct && incorrectValues.length < 2 && !incorrectValues.includes(i)) {
+                    incorrectValues.push(i);
+                }
+            }
+        }
+        
+        // Convert incorrect values to sum format
+        incorrectValues.forEach(value => {
+            const firstPart = Math.floor(Math.random() * (value + 1));
             const secondPart = value - firstPart;
-            
             options.push({
                 display: `${firstPart} + ${secondPart}`,
                 value: value
