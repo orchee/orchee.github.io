@@ -52,215 +52,58 @@
                 <!-- Trump Boxes -->
                 <section id="trumpSection" style="display: none;">
                     <h2 class="h5 text-center mb-3">How many cards in <span id="hiddenSuitName"></span>?</h2>
-                    <p class="text-center text-muted small mb-3">💡 Tip: Press the number on your keyboard to answer quickly</p>
+                    <p class="text-center text-muted small mb-3">💡 Tip: Press any number (0-9) on your keyboard to answer quickly</p>
                     <div class="row g-3 mb-4">
                         <div class="col-6 col-md-3">
                             <div class="trump-box spades" id="box-spades">
-                                <div class="suit-symbol">♠</div>
-                                <div class="suit-name">Spades</div>
+                                <!-- <div class="suit-symbol">♠</div>
+                                <div class="suit-name">Spades</div> -->
                                 <div class="card-count" id="count-spades">0</div>
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
                             <div class="trump-box hearts" id="box-hearts">
-                                <div class="suit-symbol">♥</div>
-                                <div class="suit-name">Hearts</div>
+                                <!-- <div class="suit-symbol">♥</div>
+                                <div class="suit-name">Hearts</div> -->
                                 <div class="card-count" id="count-hearts">0</div>
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
                             <div class="trump-box diamonds" id="box-diamonds">
-                                <div class="suit-symbol">♦</div>
-                                <div class="suit-name">Diamonds</div>
+                                <!-- <div class="suit-symbol">♦</div>
+                                <div class="suit-name">Diamonds</div> -->
                                 <div class="card-count" id="count-diamonds">0</div>
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
                             <div class="trump-box clubs" id="box-clubs">
-                                <div class="suit-symbol">♣</div>
-                                <div class="suit-name">Clubs</div>
+                                <!-- <div class="suit-symbol">♣</div>
+                                <div class="suit-name">Clubs</div> -->
                                 <div class="card-count" id="count-clubs">0</div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Answer Options -->
+                    <!-- Answer Options - Dial Pad -->
                     <div id="answerSection" class="answer-section">
-                        <div class="row g-3 justify-content-center">
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer1" data-value="0">0</button>
+                        <div class="dial-pad">
+                            <div class="dial-row">
+                                <button class="btn btn-answer" data-value="1">1</button>
+                                <button class="btn btn-answer" data-value="2">2</button>
+                                <button class="btn btn-answer" data-value="3">3</button>
                             </div>
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer2" data-value="0">0</button>
+                            <div class="dial-row">
+                                <button class="btn btn-answer" data-value="4">4</button>
+                                <button class="btn btn-answer" data-value="5">5</button>
+                                <button class="btn btn-answer" data-value="6">6</button>
                             </div>
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer3" data-value="0">0</button>
+                            <div class="dial-row">
+                                <button class="btn btn-answer" data-value="7">7</button>
+                                <button class="btn btn-answer" data-value="8">8</button>
+                                <button class="btn btn-answer" data-value="9">9</button>
                             </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Double Hand Section (N and S) -->
-                <section id="doubleHandSection" style="display: none;">
-                    <h2 class="h5 text-center mb-3">How many <span id="hiddenSuitNameDouble"></span> cards does WE have?</h2>
-                    <p class="text-center text-muted small mb-3">💡 Tip: Press the number on your keyboard to answer quickly</p>
-                    
-                    <!-- Hand N -->
-                    <div class="hand-label text-center mb-2">
-                        <strong>Hand N (North)</strong>
-                    </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-3">
-                            <div class="trump-box-small spades">
-                                <div class="suit-symbol-small">♠</div>
-                                <div class="card-count-small" id="count-n-spades">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small hearts">
-                                <div class="suit-symbol-small">♥</div>
-                                <div class="card-count-small" id="count-n-hearts">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small diamonds">
-                                <div class="suit-symbol-small">♦</div>
-                                <div class="card-count-small" id="count-n-diamonds">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small clubs">
-                                <div class="suit-symbol-small">♣</div>
-                                <div class="card-count-small" id="count-n-clubs">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Hand S -->
-                    <div class="hand-label text-center mb-2">
-                        <strong>Hand S (South)</strong>
-                    </div>
-                    <div class="row g-2 mb-4">
-                        <div class="col-3">
-                            <div class="trump-box-small spades">
-                                <div class="suit-symbol-small">♠</div>
-                                <div class="card-count-small" id="count-s-spades">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small hearts">
-                                <div class="suit-symbol-small">♥</div>
-                                <div class="card-count-small" id="count-s-hearts">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small diamonds">
-                                <div class="suit-symbol-small">♦</div>
-                                <div class="card-count-small" id="count-s-diamonds">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small clubs">
-                                <div class="suit-symbol-small">♣</div>
-                                <div class="card-count-small" id="count-s-clubs">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Answer Options -->
-                    <div id="answerSectionDouble" class="answer-section">
-                        <div class="row g-3 justify-content-center">
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer1-double" data-value="0">0</button>
-                            </div>
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer2-double" data-value="0">0</button>
-                            </div>
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer3-double" data-value="0">0</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Sum Round Section (N and S with sum answers) -->
-                <section id="sumRoundSection" style="display: none;">
-                    <h2 class="h5 text-center mb-3">How many <span id="hiddenSuitNameSum"></span> cards does WE have?</h2>
-                    <p class="text-center text-muted small mb-3">💡 Tip: Calculate the sum that equals the correct answer</p>
-                    
-                    <!-- Hand N -->
-                    <div class="hand-label text-center mb-2">
-                        <strong>Hand N (North)</strong>
-                    </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-3">
-                            <div class="trump-box-small spades">
-                                <div class="suit-symbol-small">♠</div>
-                                <div class="card-count-small" id="count-n-spades-sum">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small hearts">
-                                <div class="suit-symbol-small">♥</div>
-                                <div class="card-count-small" id="count-n-hearts-sum">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small diamonds">
-                                <div class="suit-symbol-small">♦</div>
-                                <div class="card-count-small" id="count-n-diamonds-sum">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small clubs">
-                                <div class="suit-symbol-small">♣</div>
-                                <div class="card-count-small" id="count-n-clubs-sum">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Hand S -->
-                    <div class="hand-label text-center mb-2">
-                        <strong>Hand S (South)</strong>
-                    </div>
-                    <div class="row g-2 mb-4">
-                        <div class="col-3">
-                            <div class="trump-box-small spades">
-                                <div class="suit-symbol-small">♠</div>
-                                <div class="card-count-small" id="count-s-spades-sum">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small hearts">
-                                <div class="suit-symbol-small">♥</div>
-                                <div class="card-count-small" id="count-s-hearts-sum">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small diamonds">
-                                <div class="suit-symbol-small">♦</div>
-                                <div class="card-count-small" id="count-s-diamonds-sum">0</div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="trump-box-small clubs">
-                                <div class="suit-symbol-small">♣</div>
-                                <div class="card-count-small" id="count-s-clubs-sum">0</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Answer Options with Sums -->
-                    <div id="answerSectionSum" class="answer-section">
-                        <div class="row g-3 justify-content-center">
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer1-sum" data-value="0">0 + 0</button>
-                            </div>
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer2-sum" data-value="0">0 + 0</button>
-                            </div>
-                            <div class="col-4 col-md-3">
-                                <button class="btn btn-answer w-100" id="answer3-sum" data-value="0">0 + 0</button>
+                            <div class="dial-row">
+                                <button class="btn btn-answer" data-value="0">0</button>
                             </div>
                         </div>
                     </div>

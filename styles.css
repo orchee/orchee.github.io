@@ -231,22 +231,6 @@ h1 {
     transition: all 0.3s ease;
 }
 
-.btn-answer .spades {
-    color: var(--spades-color);
-}
-
-.btn-answer .hearts {
-    color: var(--hearts-color);
-}
-
-.btn-answer .diamonds {
-    color: var(--diamonds-color);
-}
-
-.btn-answer .clubs {
-    color: var(--clubs-color);
-}
-
 .btn-answer:hover:not(:disabled) {
     transform: scale(1.05);
     border-color: #667eea;
@@ -309,73 +293,6 @@ h1 {
 .trump-box.hidden .card-count {
     filter: blur(10px);
     user-select: none;
-}
-
-/* Double Hand Section - Smaller Boxes */
-.hand-label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #333;
-    background: rgba(255, 255, 255, 0.7);
-    padding: 0.25rem;
-    border-radius: 6px;
-}
-
-.trump-box-small {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 8px;
-    padding: 0.5rem;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.trump-box-small:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.trump-box-small.spades {
-    border: 2px solid var(--spades-color);
-}
-
-.trump-box-small.hearts {
-    border: 2px solid var(--hearts-color);
-}
-
-.trump-box-small.diamonds {
-    border: 2px solid var(--diamonds-color);
-}
-
-.trump-box-small.clubs {
-    border: 2px solid var(--clubs-color);
-}
-
-.suit-symbol-small {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
-}
-
-.trump-box-small.spades .suit-symbol-small {
-    color: var(--spades-color);
-}
-
-.trump-box-small.hearts .suit-symbol-small {
-    color: var(--hearts-color);
-}
-
-.trump-box-small.diamonds .suit-symbol-small {
-    color: var(--diamonds-color);
-}
-
-.trump-box-small.clubs .suit-symbol-small {
-    color: var(--clubs-color);
-}
-
-.card-count-small {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #333;
 }
 
 /* Show cards toggle */
@@ -468,5 +385,70 @@ h1 {
     }
     75% {
         transform: translateX(10px);
+    }
+}
+
+/* Dial Pad Layout */
+.dial-pad {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.dial-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.dial-row .btn-answer {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+/* Last row (0 button) - single button centered */
+.dial-row:last-child .btn-answer {
+    width: 100px;
+    height: 100px;
+}
+
+@media (max-width: 576px) {
+    .dial-row .btn-answer {
+        width: 80px;
+        height: 80px;
+        font-size: 1.75rem;
+    }
+
+    .dial-row:last-child .btn-answer {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 400px) {
+    .dial-row .btn-answer {
+        width: 70px;
+        height: 70px;
+        font-size: 1.5rem;
+    }
+
+    .dial-row:last-child .btn-answer {
+        width: 70px;
+        height: 70px;
+    }
+
+    .dial-row {
+        gap: 0.75rem;
+    }
+
+    .dial-pad {
+        gap: 0.75rem;
     }
 }
