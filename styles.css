@@ -200,8 +200,8 @@ h1 {
 }
 
 .timer-display {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 1.25rem;
+    font-weight: 600;
     color: #333;
 }
 
@@ -211,8 +211,8 @@ h1 {
 }
 
 .score-display {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
     color: #666;
 }
 
