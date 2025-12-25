@@ -25,6 +25,11 @@ h1 {
     font-weight: 700;
 }
 
+.btn > a {
+    text-decoration: none;
+    color: white;
+}
+
 /* Cards Container */
 .cards-container {
     background: rgba(255, 255, 255, 0.95);
@@ -450,5 +455,173 @@ h1 {
 
     .dial-pad {
         gap: 0.75rem;
+    }
+}
+
+/* Statistics Page Styles */
+.stats-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-box {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+}
+
+.stat-box.success {
+    background: linear-gradient(135deg, #d4edda 0%, #a8d5ba 100%);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Combination Cards */
+.combination-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.combination-card {
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1rem;
+    transition: all 0.2s ease;
+}
+
+.combination-card:hover {
+    border-color: #667eea;
+    transform: translateX(5px);
+}
+
+.combo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.rank-badge {
+    background: #667eea;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    min-width: 40px;
+    text-align: center;
+}
+
+.rank-badge.rank-1 {
+    background: #dc3545;
+}
+
+.rank-badge.rank-2 {
+    background: #fd7e14;
+}
+
+.rank-badge.rank-3 {
+    background: #ffc107;
+}
+
+.combo-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
+    flex-grow: 1;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+}
+
+.combo-win-rate {
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+}
+
+.combo-win-rate.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.combo-win-rate.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.combo-win-rate.danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.combo-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.combo-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.combo-stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #666;
+}
+
+.combo-stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Responsive Stats */
+@media (max-width: 576px) {
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .combo-name {
+        font-size: 1rem;
+    }
+
+    .combo-win-rate {
+        font-size: 1.25rem;
+    }
+
+    .combo-header {
+        flex-wrap: wrap;
     }
 }

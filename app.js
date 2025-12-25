@@ -1,3 +1,81 @@
+// Statistics Manager
+class Statistics {
+    constructor() {
+        this.storageKey = 'cardGameStats';
+        this.data = this.loadStats();
+    }
+
+    loadStats() {
+        const stored = localStorage.getItem(this.storageKey);
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                console.error('Error loading stats:', e);
+            }
+        }
+        // Default structure
+        return {
+            totalGames: 0,
+            totalWins: 0,
+            combinations: {} // key: "6-4-2-1", value: { games: 0, wins: 0 }
+        };
+    }
+
+    saveStats() {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+        } catch (e) {
+            console.error('Error saving stats:', e);
+        }
+    }
+
+    // Normalize combination to sorted descending order (e.g., [3,4,3,3] -> "4-3-3-3")
+    normalizeCombination(counts) {
+        const sortedCounts = Object.values(counts).sort((a, b) => b - a);
+        return sortedCounts.join('-');
+    }
+
+    recordGame(counts, isCorrect) {
+        this.data.totalGames++;
+        if (isCorrect) {
+            this.data.totalWins++;
+        }
+
+        // Track combination stats
+        const combo = this.normalizeCombination(counts);
+        if (!this.data.combinations[combo]) {
+            this.data.combinations[combo] = { games: 0, wins: 0 };
+        }
+        this.data.combinations[combo].games++;
+        if (isCorrect) {
+            this.data.combinations[combo].wins++;
+        }
+
+        this.saveStats();
+    }
+
+    getStats() {
+        return {
+            totalGames: this.data.totalGames,
+            totalWins: this.data.totalWins,
+            winPercentage: this.data.totalGames > 0
+                ? ((this.data.totalWins / this.data.totalGames) * 100).toFixed(1)
+                : 0,
+            combinations: this.data.combinations
+        };
+    }
+
+    resetStats() {
+        this.data = {
+            totalGames: 0,
+            totalWins: 0,
+            combinations: {}
+        };
+        this.saveStats();
+    }
+}
+
 // Card Game Logic
 class CardGame {
     constructor() {
@@ -154,8 +232,9 @@ class CardGame {
 
 // UI Controller
 class UIController {
-    constructor(game) {
+    constructor(game, stats) {
         this.game = game;
+        this.stats = stats;
         this.cardsContainer = document.getElementById('cardsContainer');
         this.drawButton = document.getElementById('drawCards');
         this.showCardsToggle = document.getElementById('showCardsToggle');
@@ -170,8 +249,9 @@ class UIController {
         this.resultMessage = document.getElementById('resultMessage');
         this.nextRoundButton = document.getElementById('nextRound');
         this.hiddenSuitName = document.getElementById('hiddenSuitName');
-        
+
         this.gameActive = false;
+        this.currentCombination = null; // Store current game's combination for stats
 
         this.initializeEventListeners();
     }
@@ -255,7 +335,10 @@ class UIController {
         
         // Select random suit to hide
         const hiddenSuit = this.game.selectRandomHiddenSuit();
-        
+
+        // Store current combination for statistics
+        this.currentCombination = this.game.getCardCounts();
+
         // Update counts and hide one
         this.updateCounts(hiddenSuit);
         
@@ -398,9 +481,14 @@ class UIController {
     handleAnswer(selectedAnswer) {
         this.gameActive = false;
         this.game.stopTimer();
-        
+
         const isCorrect = selectedAnswer === this.game.correctAnswer;
-        
+
+        // Record statistics
+        if (this.currentCombination) {
+            this.stats.recordGame(this.currentCombination, isCorrect);
+        }
+
         // Adjust timer for next round
         if (isCorrect) {
             this.game.adjustTimerForCorrect();
@@ -437,7 +525,12 @@ class UIController {
     
     handleTimeout() {
         this.gameActive = false;
-        
+
+        // Record statistics (timeout counts as incorrect)
+        if (this.currentCombination) {
+            this.stats.recordGame(this.currentCombination, false);
+        }
+
         // Timeout is treated as incorrect - adjust timer
         this.game.adjustTimerForIncorrect();
         
@@ -493,8 +586,12 @@ class UIController {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
+    const stats = new Statistics();
     const game = new CardGame();
-    const ui = new UIController(game);
+    const ui = new UIController(game, stats);
+
+    // Expose stats to window for stats page
+    window.gameStats = stats;
 });
 
 // PWA Service Worker Registration
